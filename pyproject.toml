@@ -16,6 +16,7 @@ update-dependencies={shell = "poetry remove s3-ops-rust && poetry add .rust-lib/
 
 [tool.poetry.dependencies]
 python = "^3.11"
+ziglang = "0.10.1.post1"
 
 [tool.poetry.group.dev.dependencies]
 aws-lambda-powertools = {extras = ["aws-sdk"], version = "^2.23.1"}
