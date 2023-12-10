@@ -48,5 +48,5 @@ async def get_buckets_region(buckets: List[str]) -> List[Tuple[str, str]]:
 
 async def get_bucket_info(s3_client, bucket_name: str):
         bucket_location = await s3_client.get_bucket_location(Bucket=bucket_name)
-        region = bucket_location["LocationConstraint"] or "us-east-1"
+        region = bucket_location["LocationConstraint"] or "ap-northeast-1"
         return {"name": bucket_name, "region": region}
