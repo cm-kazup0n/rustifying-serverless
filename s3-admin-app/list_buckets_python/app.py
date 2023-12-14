@@ -17,12 +17,15 @@ def lambda_handler(event, context):
     return app.resolve(event, context)
 
 
+# エントリポイント
 @app.get("/buckets-python")
 def get_buckets_python() -> List[dict]:
+    # バケット一覧取得
     s3_buckets = s3_client.list_buckets()
     bucket_info_list = []
 
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+        # バケットの詳細取得
         bucket_info_list = runner.run(get_buckets_region(s3_buckets["Buckets"]))
 
     return bucket_info_list
@@ -31,7 +34,7 @@ def get_buckets_python() -> List[dict]:
 async def get_buckets_region(buckets: List[str]) -> List[Tuple[str, str]]:
     session = get_session()
     bucket_info_list = []
-    
+    # リスト内の各バケットの情報取得
     async with session.create_client("s3", config=AioConfig(retries={"max_attempts": 0}) ) as s3_client:
         tasks = [
             get_bucket_info(s3_client, bucket["Name"]) for bucket in buckets
@@ -47,6 +50,7 @@ async def get_buckets_region(buckets: List[str]) -> List[Tuple[str, str]]:
 
 
 async def get_bucket_info(s3_client, bucket_name: str):
+        # バケットロケーションからリージョンを抜き出し
         bucket_location = await s3_client.get_bucket_location(Bucket=bucket_name)
         region = bucket_location["LocationConstraint"] or "ap-northeast-1"
         return {"name": bucket_name, "region": region}

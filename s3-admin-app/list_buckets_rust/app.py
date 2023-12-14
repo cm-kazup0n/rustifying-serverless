@@ -1,6 +1,7 @@
 from typing import List
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
+# Rust で実装したモジュールをインポート
 import s3_ops_rust
 
 logger = Logger()
@@ -15,5 +16,6 @@ def lambda_handler(event, context):
 
 @app.get("/buckets-rust")
 def get_buckets_rust() -> List[dict]:
+    # Rustのモジュールを呼び出し
     return s3_client.list_buckets()
 

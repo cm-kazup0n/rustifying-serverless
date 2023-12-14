@@ -22,7 +22,7 @@ impl S3OpsRust {
 
         Ok(client)
     }
-
+    // バケット一覧を取得
     fn list_buckets(&self) -> PyResult<Vec<(String, String)>> {
         let rt = Runtime::new().unwrap();
         let result = rt.block_on(async {
@@ -36,6 +36,7 @@ async fn list_buckets_internal(client: &Client) -> Result<Vec<(String, String)>,
     let resp = client.list_buckets().send().await?;
     let buckets = resp.buckets().unwrap_or_default();
     let tasks = FuturesUnordered::new();
+    // 各バケットの詳細を取得
     for bucket in buckets {
         let bucket_name = bucket.name().unwrap_or_default();
         let task = client.get_bucket_location().bucket(bucket_name).send();
